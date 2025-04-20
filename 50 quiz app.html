@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Quiz App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+        }
+
+        .quiz-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .quiz-header h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .quiz-header ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .quiz-header li {
+            margin: 10px 0;
+            background: #f4f4f4;
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quiz-header input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .quiz-header li:hover {
+            background-color: #e0e0e0;
+        }
+
+        button {
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #5548c8;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        .result {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-container {
+                padding: 20px;
+            }
+
+            .quiz-header h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="quiz-container" id="quiz">
+        <div class="quiz-header" id="quiz-header"></div>
+        <button id="next-btn">Next</button>
+    </div>
+
+    <script>
+        const quizQuestions = [
+            { question: "What is the capital of Pakistan?", a: "Lahore", b: "Peshawar", c: "Karachi", d: "Islamabad", correct: "d" },
+            { question: "Which language is used for web development?", a: "C++", b: "Java", c: "Python", d: "JavaScript", correct: "d" },
+            { question: "Largest planet in the solar system?", a: "Mars", b: "Jupiter", c: "Neptune", d: "Earth", correct: "b" },
+            { question: "National fruit of Pakistan?", a: "Mango", b: "Orange", c: "Watermelon", d: "Banana", correct: "a" },
+            { question: "Father of computing?", a: "Jhons Bravo", b: "Robert Virtue", c: "Charles Babbage", d: "Williams Smith", correct: "c" },
+            { question: "Symbol for water?", a: "O2", b: "H2O", c: "CO2", d: "NaCl", correct: "b" },
+            { question: "Gas absorbed by plants for photosynthesis?", a: "Oxygen", b: "Carbon Dioxide", c: "Nitrogen", d: "Hydrogen", correct: "b" },
+            { question: "How many continents on Earth?", a: "5", b: "6", c: "7", d: "8", correct: "c" },
+            { question: "Country famous for the Great Wall?", a: "India", b: "Japan", c: "China", d: "Russia", correct: "c" },
+            { question: "Largest ocean?", a: "Atlantic", b: "Indian", c: "Arctic", d: "Pacific", correct: "d" },
+            { question: "Who wrote 'Hamlet'?", a: "Wordsworth", b: "Shakespeare", c: "Milton", d: "Twain", correct: "b" },
+            { question: "Speed of light?", a: "300,000 km/s", b: "150,000 km/s", c: "100,000 km/s", d: "450,000 km/s", correct: "a" },
+            { question: "Universal donor blood group?", a: "A", b: "B", c: "O", d: "AB", correct: "c" },
+            { question: "Closest planet to the Sun?", a: "Mars", b: "Venus", c: "Mercury", d: "Jupiter", correct: "c" },
+            { question: "Powerhouse of the cell?", a: "Nucleus", b: "Mitochondria", c: "Ribosome", d: "Golgi body", correct: "b" },
+            { question: "Fastest land animal?", a: "Cheetah", b: "Lion", c: "Horse", d: "Kangaroo", correct: "a" },
+            { question: "Tallest mountain?", a: "K2", b: "Kilimanjaro", c: "Everest", d: "Makalu", correct: "c" },
+            { question: "Hardest natural substance?", a: "Gold", b: "Iron", c: "Diamond", d: "Platinum", correct: "c" },
+            { question: "Land of the Rising Sun?", a: "China", b: "Japan", c: "South Korea", d: "Thailand", correct: "b" },
+            { question: "Element necessary for breathing?", a: "Oxygen", b: "Nitrogen", c: "CO2", d: "Hydrogen", correct: "a" }
+        ];
+
+        const nextBtn = document.getElementById("next-btn");
+        const quizHeader = document.getElementById("quiz-header");
+        const quizBox = document.getElementById("quiz");
+
+        let currentSet = 0;
+        let score = 0;
+
+        function loadQuestions() {
+            quizHeader.innerHTML = "";
+            const start = currentSet * 5;
+            const end = start + 5;
+
+            for (let i = start; i < end && i < quizQuestions.length; i++) {
+                const q = quizQuestions[i];
+                quizHeader.innerHTML += `
+          <h2>${q.question}</h2>
+          <ul>
+            <label><li><input type="radio" name="answer${i}" value="a"> ${q.a}</li></label>
+            <label><li><input type="radio" name="answer${i}" value="b"> ${q.b}</li></label>
+            <label><li><input type="radio" name="answer${i}" value="c"> ${q.c}</li></label>
+            <label><li><input type="radio" name="answer${i}" value="d"> ${q.d}</li></label>
+          </ul>
+        `;
+            }
+        }
+
+        nextBtn.addEventListener("click", () => {
+            const start = currentSet * 5;
+            const end = start + 5;
+
+            for (let i = start; i < end && i < quizQuestions.length; i++) {
+                const selected = document.querySelector(`input[name="answer${i}"]:checked`);
+                if (selected && selected.value === quizQuestions[i].correct) {
+                    score++;
+                }
+            }
+
+            currentSet++;
+            if (currentSet * 5 >= quizQuestions.length) {
+                quizBox.innerHTML = `
+          <div class="result">You scored ${score}/${quizQuestions.length}</div>
+          <button onclick="location.reload()">Try Again</button>
+        `;
+            } else {
+                loadQuestions();
+            }
+        });
+
+        loadQuestions();
+    </script>
+
+</body>
+
+</html>

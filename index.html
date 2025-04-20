@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Quiz App</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #b8c6db;
+            background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 100%);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
+            width: 600px;
+            overflow: hidden;
+        }
+
+        .quiz-header {
+            padding: 4rem;
+        }
+
+        .quiz-header h2 {
+            padding: 1rem;
+            text-align: center;
+            margin: 0;
+        }
+
+        .quiz-header ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .quiz-header ul li {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+        }
+
+        .quiz-header ul li label {
+            cursor: pointer;
+        }
+
+        .quiz-container button {
+            background-color: #8e44ad;
+            color: #fff;
+            border: none;
+            display: block;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-family: inherit;
+            padding: 1.3rem;
+        }
+
+        .quiz-container button:hover {
+            background-color: #732d91;
+        }
+
+        .quiz-container button:focus {
+            outline: none;
+            background-color: #5e3370;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quiz-container" id="quiz">
+        <div class="quiz-header">
+            <h2 id="question"> Question Text </h2>
+            <ul>
+                <li>
+                    <input type="radio" name="answer" class="answer" id="a">
+                    <label for="a" id="a_text">Question</label>
+                </li>
+                <li>
+                    <input type="radio" name="answer" class="answer" id="b">
+                    <label for="b" id="b_text">Question</label>
+                </li>
+                <li>
+                    <input type="radio" name="answer" class="answer" id="c">
+                    <label for="c" id="c_text">Question</label>
+                </li>
+                <li>
+                    <input type="radio" name="answer" class="answer" id="d">
+                    <label for="d" id="d_text">Question</label>
+                </li>
+            </ul>
+        </div>
+        <button id="submit">Submit</button>
+    </div>
+
+
+
+
+    <script>
+        const quizQuestions = [
+            {
+                question: "What is the capital of Pakistan?",
+                a: 'Lahore',
+                b: 'Peshawar',
+                c: 'Karachi',
+                d: 'Islamabad',
+                correctAnswer: "d"
+            },
+            {
+                question: "Which programming language is used for web development?",
+                a: 'C++',
+                b: 'Java',
+                c: 'Python',
+                d: 'Javascript',
+                correctAnswer: "d"
+            },
+            {
+                question: "What is the largest planet in our solar system?",
+                a: 'Mars',
+                b: 'Jupiter',
+                c: 'Neptune',
+                d: 'Earth',
+                correctAnswer: "b"
+            },
+            {
+                question: "Which is the national fruit of Pakistan?",
+                a: 'Mango',
+                b: 'Orange',
+                c: 'Watermelon',
+                d: 'Banana',
+                correctAnswer: "a"
+            },
+            {
+                question: "Who is known as the father of computing?",
+                a: 'Jhons Bravo',
+                b: 'Robert Virtue',
+                c: 'Charles Babbage',
+                d: 'Williams Smith',
+                correctAnswer: "c"
+            }
+        ];
+
+
+
+        const quiz = document.getElementById("quiz"); // container
+        const answerEls = document.querySelectorAll(".answer"); //  all inputs
+        const questionEl = document.getElementById('question') // h2 for questions
+        const a_text = document.getElementById('a_text') //label 1
+        const b_text = document.getElementById('b_text') // label 2
+        const c_text = document.getElementById('c_text') // label 3
+        const d_text = document.getElementById('d_text') // label 4
+        const submitBtn = document.getElementById('submit') // submit button
+
+
+        let index = 0;
+        let score = 0;
+        loadquiz()
+
+        function loadquiz() {
+            unchecked()
+            let object = quizQuestions[index]
+            questionEl.innerHTML = object.question
+            a_text.innerHTML = object.a
+            b_text.innerHTML = object.b
+            c_text.innerHTML = object.c
+            d_text.innerHTML = object.d
+        }
+        function unchecked() {
+            answerEls.forEach(answerEl => {
+                answerEl.checked = false
+            })
+        }
+
+        function checking() {
+            let answer
+
+            answerEls.forEach(answerEl => {
+                if (answerEl.checked) {
+                    answer = answerEl.id
+                }
+            })
+            return answer
+
+        }
+
+        submitBtn.addEventListener("click", function () {
+            let answer = checking()
+            console.log(answer);
+
+            if (answer == quizQuestions[index].correctAnswer) {
+                score++
+            }
+            index++
+
+            if (index < quizQuestions.length) {
+                loadquiz()
+            }
+            else {
+                quiz.innerHTML = `<h2>You answerd ${score}/${quizQuestions.length} question correctly</h2>
+                  <button onclick="location.reload()">Reload</button>
+                `
+            }
+        })
+
+    </script>
+</body>
+
+</html>
